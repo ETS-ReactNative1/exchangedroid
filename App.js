@@ -8,6 +8,7 @@
 
 import React, {useState, useEffect} from 'react';
 import {
+  TouchableOpacity,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -17,6 +18,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Feather';
+import {Modal} from './src/Modal';
 
 const APP_BACKGROUND_COLOR = '#5bdfc3';
 
@@ -58,10 +60,15 @@ const useFetch = url => {
 };
 
 const App = () => {
+  const [modal, setModalState] = useState(false);
+  const [modalFor, setModalFor] = useState(0);
+
   const [currOne, setCurrOne] = useState('TRY');
   const [currTwo, setCurrTwo] = useState('USD');
+
   const [currOneValue, setCurrOneValue] = useState('1');
   const [currTwoValue, setCurrTwoValue] = useState('0');
+
   const res = useFetch('https://api.exchangerate-api.com/v4/latest/TRY');
 
   useEffect(() => {
@@ -78,13 +85,27 @@ const App = () => {
         <LinearGradient
           colors={['#5bdfc3', '#2e9696']}
           style={styles.container}>
+          {modal && (
+            <Modal
+              modalFor={modalFor}
+              setCurrOne={setCurrOne}
+              setCurrTwo={setCurrTwo}
+              setModalState={setModalState}
+            />
+          )}
           <View style={styles.content}>
             <Text style={styles.title}>{'Exchange'}</Text>
           </View>
           <View style={styles.flexItem}>
-            <View style={styles.currencyIcon}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                setModalFor(0);
+                setModalState(true);
+              }}
+              style={styles.currencyIcon}>
               <Text style={styles.currencyText}>{currOne}</Text>
-            </View>
+            </TouchableOpacity>
             <TextInput
               onChangeText={text => setCurrOneValue(text)}
               value={currOneValue}
@@ -107,9 +128,15 @@ const App = () => {
             />
           </View>
           <View style={styles.flexItem}>
-            <View style={styles.currencyIcon}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                setModalFor(1);
+                setModalState(true);
+              }}
+              style={styles.currencyIcon}>
               <Text style={styles.currencyText}>{currTwo}</Text>
-            </View>
+            </TouchableOpacity>
             <TextInput
               onChangeText={text => setCurrTwoValue(text)}
               value={
