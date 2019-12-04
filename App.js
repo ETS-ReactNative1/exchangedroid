@@ -16,6 +16,7 @@ import {
   StatusBar,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/Feather';
 
 const APP_BACKGROUND_COLOR = '#5bdfc3';
 
@@ -56,9 +57,19 @@ const useFetch = url => {
   return data;
 };
 
-const App: () => React$Node = () => {
+const App = () => {
+  const [currOne, setCurrOne] = useState('TRY');
+  const [currTwo, setCurrTwo] = useState('USD');
+  const [currOneValue, setCurrOneValue] = useState('1');
+  const [currTwoValue, setCurrTwoValue] = useState('0');
   const res = useFetch('https://api.exchangerate-api.com/v4/latest/TRY');
-  console.log(res);
+
+  useEffect(() => {
+    if (res) {
+      setCurrOneValue(res.rates[currOne]);
+      setCurrTwoValue(res.rates[currTwo]);
+    }
+  }, []);
 
   return (
     <>
@@ -72,24 +83,44 @@ const App: () => React$Node = () => {
           </View>
           <View style={styles.flexItem}>
             <View style={styles.currencyIcon}>
-              <Text style={styles.currencyText}>TR</Text>
+              <Text style={styles.currencyText}>{currOne}</Text>
             </View>
             <TextInput
-              value={res ? res.rates.TRY.toString() : '0.00'}
+              onChangeText={text => setCurrOneValue(text)}
+              value={currOneValue}
               style={styles.textarea}
+              keyboardType="numeric"
             />
           </View>
           <View style={styles.flexItem}>
-            <View style={styles.exchangeIcon}></View>
-            <TextInput value="0.00" style={styles.textarea} />
+            <View style={styles.exchangeIcon}>
+              <Icon
+                name="refresh-cw"
+                color="rgba(46, 150, 150, 0.6)"
+                size={28}
+              />
+            </View>
+            <TextInput
+              value="0.00"
+              style={[styles.textarea, {opacity: 0}]}
+              editable={false}
+            />
           </View>
           <View style={styles.flexItem}>
             <View style={styles.currencyIcon}>
-              <Text style={styles.currencyText}>USD</Text>
+              <Text style={styles.currencyText}>{currTwo}</Text>
             </View>
             <TextInput
-              value={res ? res.rates.EUR.toString() : '0.00'}
+              onChangeText={text => setCurrTwoValue(text)}
+              value={
+                res
+                  ? (res.rates.USD * parseFloat(currOneValue || '0'))
+                      .toString()
+                      .substr(0, 8)
+                  : currTwoValue
+              }
               style={styles.textarea}
+              keyboardType="numeric"
             />
           </View>
         </LinearGradient>
@@ -131,7 +162,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: 20,
     borderWidth: 5,
-    borderColor: 'rgba(0, 0, 0, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.8)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -147,11 +178,15 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     marginRight: 20,
     borderWidth: 5,
-    borderColor: 'rgba(0,0,0,.1)',
+    borderColor: 'rgba(255, 255, 255, 0.8)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textarea: {
     width: 200,
     fontSize: 35,
+    color: 'white',
     padding: 5,
     textAlign: 'right',
     borderBottomWidth: 1,
