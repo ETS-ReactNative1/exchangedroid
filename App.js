@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -19,7 +19,47 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const APP_BACKGROUND_COLOR = '#5bdfc3';
 
+const getCurrencies = async () => {
+  const fetchData = async () =>
+    fetch('https://api.exchangerate-api.com/v4/latest/TRY')
+      .then(async res => {
+        if (res.ok) {
+          const response = await res.json();
+          return response;
+        } else {
+          console.log('HATA, then else');
+        }
+      })
+      .catch(err => {
+        console.log('HATA, catch');
+      });
+};
+
+const useFetch = url => {
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    let mounted = true;
+    const abortController = new AbortController();
+    (async () => {
+      const res = await fetch(url, {
+        signal: abortController.signal,
+      });
+      const data = await res.json();
+      if (mounted) setData(data);
+    })();
+    const cleanup = () => {
+      mounted = false;
+      abortController.abort();
+    };
+    return cleanup;
+  }, [url]);
+  return data;
+};
+
 const App: () => React$Node = () => {
+  const res = useFetch('https://api.exchangerate-api.com/v4/latest/TRY');
+  console.log(res);
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -28,13 +68,16 @@ const App: () => React$Node = () => {
           colors={['#5bdfc3', '#2e9696']}
           style={styles.container}>
           <View style={styles.content}>
-            <Text style={styles.title}>Exchange</Text>
+            <Text style={styles.title}>{'Exchange'}</Text>
           </View>
           <View style={styles.flexItem}>
             <View style={styles.currencyIcon}>
               <Text style={styles.currencyText}>TR</Text>
             </View>
-            <TextInput value="0.00" style={styles.textarea} />
+            <TextInput
+              value={res ? res.rates.TRY.toString() : '0.00'}
+              style={styles.textarea}
+            />
           </View>
           <View style={styles.flexItem}>
             <View style={styles.exchangeIcon}></View>
@@ -44,7 +87,10 @@ const App: () => React$Node = () => {
             <View style={styles.currencyIcon}>
               <Text style={styles.currencyText}>USD</Text>
             </View>
-            <TextInput value="0.00" style={styles.textarea} />
+            <TextInput
+              value={res ? res.rates.EUR.toString() : '0.00'}
+              style={styles.textarea}
+            />
           </View>
         </LinearGradient>
       </SafeAreaView>
@@ -85,7 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: 20,
     borderWidth: 5,
-    borderColor: 'rgba(0,0,0,.1)',
+    borderColor: 'rgba(0, 0, 0, 0.08)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
