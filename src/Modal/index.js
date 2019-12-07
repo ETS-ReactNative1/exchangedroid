@@ -15,7 +15,7 @@ export const HEIGHT = Dimensions.get('window').height;
 
 const list = ['TRY', 'EUR', 'USD'];
 
-export const Modal = ({modalFor, setCurrOne, setCurrTwo, setModalState}) => {
+export const Modal = ({state, setModalState}) => {
   return (
     <View
       style={{
@@ -42,9 +42,11 @@ export const Modal = ({modalFor, setCurrOne, setCurrTwo, setModalState}) => {
                 key={i}
                 activeOpacity={0.8}
                 onPress={() => {
-                  if (modalFor == 0) setCurrOne(item);
-                  else setCurrTwo(item);
-                  setModalState(false);
+                  setModalState({
+                    currentOne: state.modalFor == 0 ? item : state.currentOne,
+                    currentTwo: state.modalFor == 1 ? item : state.currentTwo,
+                    modal: false,
+                  });
                 }}
                 style={{
                   width: '100%',
@@ -59,7 +61,7 @@ export const Modal = ({modalFor, setCurrOne, setCurrTwo, setModalState}) => {
           })}
         </ScrollView>
         <TouchableOpacity
-          onPress={() => setModalState(false)}
+          onPress={() => setModalState({modal: false})}
           activeOpacity={0.6}
           style={{
             width: 50,
