@@ -9,6 +9,8 @@ import {
 
 import {Modal} from '../Modal';
 import Icon from 'react-native-vector-icons/Feather';
+import LinearGradient from 'react-native-linear-gradient';
+import {CurrencySelectButton} from './components/CurrencySelectButton';
 
 export class ExchangeDroid extends React.Component {
   constructor(props) {
@@ -65,14 +67,13 @@ export class ExchangeDroid extends React.Component {
           <Text style={Styles.title}>{'Exchange'}</Text>
         </View>
         <View style={Styles.flexItem}>
-          <TouchableOpacity
-            activeOpacity={0.6}
+          <CurrencySelectButton
+            current={currentOne}
             onPress={() => {
               this.setState({modal: true, modalFor: 0});
             }}
-            style={Styles.currencyIcon}>
-            <Text style={Styles.currencyText}>{currentOne}</Text>
-          </TouchableOpacity>
+          />
+
           <View
             style={{
               display: 'flex',
@@ -90,6 +91,7 @@ export class ExchangeDroid extends React.Component {
                   marginTop: 10,
                   color: 'white',
                   fontFamily: 'SFUIDisplay-Light',
+                  fontSize: 18,
                 }}>
                 {'1 ' +
                   currentOne +
@@ -102,14 +104,12 @@ export class ExchangeDroid extends React.Component {
           </View>
         </View>
         <View style={Styles.flexItem}>
-          <TouchableOpacity
-            activeOpacity={0.6}
+          <CurrencySelectButton
+            small
             onPress={() => {
               this.setState({currentOne: currentTwo, currentTwo: currentOne});
             }}
-            style={Styles.exchangeIcon}>
-            <Icon name="refresh-cw" color="rgba(46, 150, 150, 0.6)" size={28} />
-          </TouchableOpacity>
+          />
           <TextInput
             value="0.00"
             style={[Styles.textarea, {opacity: 0}]}
@@ -117,14 +117,13 @@ export class ExchangeDroid extends React.Component {
           />
         </View>
         <View style={Styles.flexItem}>
-          <TouchableOpacity
-            activeOpacity={0.6}
+          <CurrencySelectButton
+            current={currentTwo}
             onPress={() => {
               this.setState({modal: true, modalFor: 1});
             }}
-            style={Styles.currencyIcon}>
-            <Text style={Styles.currencyText}>{currentTwo}</Text>
-          </TouchableOpacity>
+          />
+
           <TextInput
             editable={false}
             value={
@@ -172,33 +171,6 @@ export const Styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  currencyIcon: {
-    zIndex: 1,
-    width: 100,
-    height: 100,
-    backgroundColor: 'white',
-    borderRadius: 50,
-    marginRight: 20,
-    borderWidth: 8,
-    borderColor: 'rgba(255, 255, 255, 0.8)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 6,
-    },
-    shadowOpacity: 0.37,
-    shadowRadius: 7.49,
-    elevation: 12,
-  },
-  currencyText: {
-    fontSize: 22,
-    fontFamily: 'SFUIDisplay-Light',
-    color: '#2e9696',
-    fontWeight: '100',
-  },
   exchangeIcon: {
     width: 60,
     height: 60,
@@ -213,7 +185,7 @@ export const Styles = StyleSheet.create({
   },
   textarea: {
     width: 200,
-    fontSize: 35,
+    fontSize: 45,
     fontFamily: 'SFUIDisplay-Thin',
     color: 'white',
     padding: 5,
