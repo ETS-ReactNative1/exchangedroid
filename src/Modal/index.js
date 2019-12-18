@@ -19,7 +19,7 @@ export const Modal = ({state, setModalState}) => {
   return (
     <View
       style={{
-        zIndex: 2,
+        zIndex: 3,
         position: 'absolute',
         width: '100%',
         height: HEIGHT,
@@ -27,6 +27,14 @@ export const Modal = ({state, setModalState}) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 6,
+        },
+        shadowOpacity: 0.37,
+        shadowRadius: 7.49,
+        elevation: 12,
       }}>
       <View
         style={{
@@ -55,7 +63,9 @@ export const Modal = ({state, setModalState}) => {
                   borderBottomWidth: 1,
                   borderColor: '#2e9696',
                 }}>
-                <Text style={{fontSize: 20}}>{item}</Text>
+                <Text style={{fontSize: 20, fontFamily: 'SFUIDisplay-Thin'}}>
+                  {item}
+                </Text>
               </TouchableOpacity>
             );
           })}
@@ -74,6 +84,14 @@ export const Modal = ({state, setModalState}) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 6,
+            },
+            shadowOpacity: 0.37,
+            shadowRadius: 7.49,
+            elevation: 12,
           }}>
           <Icon name="x" size={30} color="white" />
         </TouchableOpacity>

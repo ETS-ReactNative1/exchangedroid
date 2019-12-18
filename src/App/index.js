@@ -61,13 +61,6 @@ export class ExchangeDroid extends React.Component {
 
     return (
       <>
-        {modal && (
-          <Modal
-            modalFor={modalFor}
-            state={this.state}
-            setModalState={this._setState}
-          />
-        )}
         <View style={Styles.content}>
           <Text style={Styles.title}>{'Exchange'}</Text>
         </View>
@@ -80,12 +73,33 @@ export class ExchangeDroid extends React.Component {
             style={Styles.currencyIcon}>
             <Text style={Styles.currencyText}>{currentOne}</Text>
           </TouchableOpacity>
-          <TextInput
-            onChangeText={text => this.setState({value: text})}
-            value={value}
-            style={Styles.textarea}
-            keyboardType="numeric"
-          />
+          <View
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+            }}>
+            <TextInput
+              onChangeText={text => this.setState({value: text})}
+              value={value}
+              style={Styles.textarea}
+              keyboardType="numeric"
+            />
+            {parseInt(this.state.value) > 1 && (
+              <Text
+                style={{
+                  marginTop: 10,
+                  color: 'white',
+                  fontFamily: 'SFUIDisplay-Light',
+                }}>
+                {'1 ' +
+                  currentOne +
+                  ' = ' +
+                  data.rates[currentTwo] +
+                  ' ' +
+                  currentTwo}
+              </Text>
+            )}
+          </View>
         </View>
         <View style={Styles.flexItem}>
           <TouchableOpacity
@@ -124,6 +138,13 @@ export class ExchangeDroid extends React.Component {
             keyboardType="numeric"
           />
         </View>
+        {modal && (
+          <Modal
+            modalFor={modalFor}
+            state={this.state}
+            setModalState={this._setState}
+          />
+        )}
       </>
     );
   }
@@ -137,7 +158,12 @@ export const Styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  title: {fontSize: 35, color: 'white', marginBottom: 30},
+  title: {
+    fontSize: 35,
+    fontFamily: 'SFUIDisplay-Thin',
+    color: 'white',
+    marginBottom: 30,
+  },
   flexItem: {
     flex: 1,
     width: '100%',
@@ -147,20 +173,31 @@ export const Styles = StyleSheet.create({
     alignItems: 'center',
   },
   currencyIcon: {
-    width: 80,
-    height: 80,
+    zIndex: 1,
+    width: 100,
+    height: 100,
     backgroundColor: 'white',
-    borderRadius: 40,
+    borderRadius: 50,
     marginRight: 20,
-    borderWidth: 5,
+    borderWidth: 8,
     borderColor: 'rgba(255, 255, 255, 0.8)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.37,
+    shadowRadius: 7.49,
+    elevation: 12,
   },
   currencyText: {
     fontSize: 22,
-    color: 'gray',
+    fontFamily: 'SFUIDisplay-Light',
+    color: '#2e9696',
+    fontWeight: '100',
   },
   exchangeIcon: {
     width: 60,
@@ -177,6 +214,7 @@ export const Styles = StyleSheet.create({
   textarea: {
     width: 200,
     fontSize: 35,
+    fontFamily: 'SFUIDisplay-Thin',
     color: 'white',
     padding: 5,
     textAlign: 'right',
